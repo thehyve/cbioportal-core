@@ -154,8 +154,10 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
         } else {
             if (chrom.equalsIgnoreCase("X"))
                 chrom = "39";
+            else if (chrom.equalsIgnoreCase("Y"))
+                chrom = "40";
             chromNr = Integer.parseInt(chrom);
-            if (chromNr > 39) {
+            if (chromNr > 40) {
                 throw new IllegalArgumentException("Error: Invalid chromosome [" + chrom + "]");
             }
         }
