@@ -49,7 +49,8 @@ import java.util.*;
 public class ImportCopyNumberSegmentData extends ConsoleRunnable {
 
     private int entriesSkipped;
-    
+    private String genome;
+
     private void importData(File file, int cancerStudyId) throws IOException, DaoException {
         MySQLbulkLoader.bulkLoadOn();
         FileReader reader = new FileReader(file);
@@ -69,8 +70,8 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
                 CancerStudy cancerStudy = DaoCancerStudy.getCancerStudyByInternalId(cancerStudyId);
                 String chrom = strs[1].trim(); 
                 //validate in same way as GistitReader:
-                ValidationUtils.validateChromosome(chrom);
                 
+                validateChromosome(chrom, genome);
                 long start = Double.valueOf(strs[2]).longValue();
                 long end = Double.valueOf(strs[3]).longValue();
                 if (start >= end) {
@@ -126,6 +127,7 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
             }
         
             importCopyNumberSegmentFileMetadata(cancerStudy, properties);
+            genome = importCopyNumberSegmentFileMetadata(cancerStudy, properties);
             importCopyNumberSegmentFileData(cancerStudy, dataFile);
             DaoCopyNumberSegment.createFractionGenomeAlteredClinicalData(cancerStudy.getInternalId());
             if( MySQLbulkLoader.isBulkLoad()) {
@@ -136,6 +138,28 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
         } catch (IOException|DaoException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int validateChromosome(String chrom, String genome) {
+        int chromNr;
+        if (genome != "canFam3") {
+            if (chrom.equalsIgnoreCase("X"))
+                chrom = "23";
+            if (chrom.equalsIgnoreCase("Y"))
+                chrom = "24";
+            chromNr = Integer.parseInt(chrom);
+            if (chromNr > 24) {
+                throw new IllegalArgumentException("Error: Invalid chromosome [" + chrom + "]");
+            }
+        } else {
+            if (chrom.equalsIgnoreCase("X"))
+                chrom = "39";
+            chromNr = Integer.parseInt(chrom);
+            if (chromNr > 39) {
+                throw new IllegalArgumentException("Error: Invalid chromosome [" + chrom + "]");
+            }
+        }
+        return chromNr;
     }
 
     private static CancerStudy getCancerStudy(Properties properties) throws DaoException {
@@ -151,6 +175,8 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
     }
 
     private static void importCopyNumberSegmentFileMetadata(CancerStudy cancerStudy, Properties properties) throws DaoException {
+    private static String importCopyNumberSegmentFileMetadata(CancerStudy cancerStudy, Properties properties)
+            throws DaoException {
         CopyNumberSegmentFile copyNumSegFile = new CopyNumberSegmentFile();
         copyNumSegFile.cancerStudyId = cancerStudy.getInternalId();
         String referenceGenomeId = properties.getProperty("reference_genome_id").trim();
@@ -166,6 +192,7 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
         copyNumSegFile.description = properties.getProperty("description").trim();
         copyNumSegFile.filename = properties.getProperty("data_filename").trim();
         DaoCopyNumberSegmentFile.addCopyNumberSegmentFile(copyNumSegFile);
+        return copyNumSegFile.referenceGenomeId.toString();
     }
 
     private void importCopyNumberSegmentFileData(CancerStudy cancerStudy, String dataFilename) throws IOException, DaoException {
