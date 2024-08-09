@@ -174,7 +174,6 @@ public class ImportCopyNumberSegmentData extends ConsoleRunnable {
         return (DaoCopyNumberSegment.segmentDataExistForCancerStudy(cancerStudy.getInternalId()));
     }
 
-    private static void importCopyNumberSegmentFileMetadata(CancerStudy cancerStudy, Properties properties) throws DaoException {
     private static String importCopyNumberSegmentFileMetadata(CancerStudy cancerStudy, Properties properties)
             throws DaoException {
         CopyNumberSegmentFile copyNumSegFile = new CopyNumberSegmentFile();
