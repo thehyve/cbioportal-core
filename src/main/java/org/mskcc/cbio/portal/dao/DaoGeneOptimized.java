@@ -350,14 +350,14 @@ public class DaoGeneOptimized {
 
         if (validChrValues==null) {
             validChrValues = new HashMap<String,String>();
-            for (int lc = 1; lc<=24; lc++) {
+            for (int lc = 1; lc<=37; lc++) {
                     validChrValues.put(Integer.toString(lc),Integer.toString(lc));
                     validChrValues.put("CHR" + Integer.toString(lc),Integer.toString(lc));
             }
-            validChrValues.put("X","23");
-            validChrValues.put("CHRX","23");
-            validChrValues.put("Y","24");
-            validChrValues.put("CHRY","24");
+            validChrValues.put("X","37");
+            validChrValues.put("CHRX","37");
+            // validChrValues.put("Y","24");
+            // validChrValues.put("CHRY","24");
             validChrValues.put("NA","NA");
             validChrValues.put("MT","MT"); // mitochondria
         }
