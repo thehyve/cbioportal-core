@@ -136,7 +136,8 @@ public class ImportProfileData extends ConsoleRunnable {
                     );
                     genericAssayProfileImporter.importData();
                 }
-            } else if(
+            } 
+            else if(
                 geneticProfile.getGeneticAlterationType() == GeneticAlterationType.COPY_NUMBER_ALTERATION 
                 && DISCRETE_LONG.name().equals(geneticProfile.getOtherMetaDataField("datatype"))
             ) {
@@ -150,7 +151,15 @@ public class ImportProfileData extends ConsoleRunnable {
                     overwriteExisting
                 );
                 importer.importData();
+            } else if (geneticProfile.getGeneticAlterationType() == GeneticAlterationType.SINGLE_CELL_EXPRESSION) {
+                ImportSingleCellExpressionData importer = new ImportSingleCellExpressionData(
+                    dataFile,
+                    geneticProfile.getGeneticProfileId(),
+                    daoGene
+                );
+                importer.importData();
             } else {
+                // All other files go through this
                 ImportTabDelimData importer = new ImportTabDelimData(
                     dataFile, 
                     geneticProfile.getTargetLine(), 

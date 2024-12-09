@@ -1,0 +1,8 @@
+cancer_study_identifier: msk_spectrum_tme_2022
+genetic_alteration_type: SINGLE_CELL_EXPRESSION
+datatype: SINGLE_CELL_EXPRESSION
+stable_id: single_cell_expression
+show_profile_in_analysis_tab: false
+profile_name: single cell expression
+profile_description: single cell expression test
+data_filename: data_single_cell_expression.txt

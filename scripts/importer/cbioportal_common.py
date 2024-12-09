@@ -66,6 +66,7 @@ class MetaFileTypes(object):
     CNA_CONTINUOUS = 'meta_contCNA'
     SEG = 'meta_segment'
     EXPRESSION = 'meta_expression'
+    SINGLE_CELL_EXPRESSION = 'meta_single_cell_expression'
     MUTATION = 'meta_mutations_extended'
     MUTATION_UNCALLED = 'meta_mutations_uncalled'
     METHYLATION = 'meta_methylation'
@@ -203,6 +204,18 @@ META_FIELD_MAP = {
         'namespaces': False
     },
     MetaFileTypes.EXPRESSION: {
+        'cancer_study_identifier': True,
+        'genetic_alteration_type': True,
+        'datatype': True,
+        'stable_id': True,
+        'source_stable_id': False,
+        'show_profile_in_analysis_tab': True,
+        'profile_name': True,
+        'profile_description': True,
+        'data_filename': True,
+        'gene_panel': False
+    },
+    MetaFileTypes.SINGLE_CELL_EXPRESSION: {
         'cancer_study_identifier': True,
         'genetic_alteration_type': True,
         'datatype': True,
@@ -399,6 +412,7 @@ IMPORTER_CLASSNAME_BY_META_TYPE = {
     MetaFileTypes.CNA_CONTINUOUS: "org.mskcc.cbio.portal.scripts.ImportProfileData",
     MetaFileTypes.SEG: "org.mskcc.cbio.portal.scripts.ImportCopyNumberSegmentData",
     MetaFileTypes.EXPRESSION: "org.mskcc.cbio.portal.scripts.ImportProfileData",
+    MetaFileTypes.SINGLE_CELL_EXPRESSION: "org.mskcc.cbio.portal.scripts.ImportProfileData",
     MetaFileTypes.MUTATION: "org.mskcc.cbio.portal.scripts.ImportProfileData",
     MetaFileTypes.MUTATION_UNCALLED: "org.mskcc.cbio.portal.scripts.ImportProfileData",
     MetaFileTypes.METHYLATION: "org.mskcc.cbio.portal.scripts.ImportProfileData",
@@ -692,7 +706,8 @@ def get_meta_file_type(meta_dictionary, logger, filename):
         ("GENESET_SCORE", "P-VALUE"): MetaFileTypes.GSVA_PVALUES,
         ("GENERIC_ASSAY", "LIMIT-VALUE"): MetaFileTypes.GENERIC_ASSAY_CONTINUOUS,
         ("GENERIC_ASSAY", "BINARY"): MetaFileTypes.GENERIC_ASSAY_BINARY,
-        ("GENERIC_ASSAY", "CATEGORICAL"): MetaFileTypes.GENERIC_ASSAY_CATEGORICAL
+        ("GENERIC_ASSAY", "CATEGORICAL"): MetaFileTypes.GENERIC_ASSAY_CATEGORICAL,
+        ("SINGLE_CELL_EXPRESSION", "SINGLE_CELL_EXPRESSION"): MetaFileTypes.SINGLE_CELL_EXPRESSION
     }
     result = None
     if 'genetic_alteration_type' in meta_dictionary and 'datatype' in meta_dictionary:
